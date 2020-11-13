@@ -498,8 +498,8 @@ func getValue(a interface{}) (reflect.Value, error) {
 
 				if tags.empty {
 					rand.Seed(time.Now().UnixNano())
-					i := rand.Intn(100)
-					if i%2 == 0 {
+					ri := rand.Intn(100)
+					if ri%2 == 0 {
 						v.Field(i).Set(reflect.Zero(t))
 					}
 				}
