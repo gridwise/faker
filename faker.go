@@ -68,6 +68,7 @@ const (
 	tagName               = "faker"
 	keep                  = "keep"
 	unique                = "unique"
+	empty                 = "empty"
 	ID                    = "uuid_digit"
 	HyphenatedID          = "uuid_hyphenated"
 	EmailTag              = "email"
@@ -433,6 +434,7 @@ func getValue(a interface{}) (reflect.Value, error) {
 		switch t.String() {
 		case "time.Time":
 			ft := time.Now().Add(time.Duration(rand.Int63()))
+
 			return reflect.ValueOf(ft), nil
 		default:
 			originalDataVal := reflect.ValueOf(a)
@@ -494,6 +496,13 @@ func getValue(a interface{}) (reflect.Value, error) {
 					retry = 0
 				}
 
+				if tags.empty {
+					rand.Seed(time.Now().UnixNano())
+					i := rand.Intn(100)
+					if i%2 == 0 {
+						v.Field(i).Addr().Set(reflect.Zero(v.Field(i).Type()))
+					}
+				}
 			}
 			return v, nil
 		}
@@ -606,6 +615,7 @@ func decodeTags(typ reflect.Type, i int) structTag {
 
 	keepOriginal := false
 	uni := false
+	emp := false
 	res := make([]string, 0)
 	for _, tag := range tags {
 		if tag == keep {
@@ -614,13 +624,18 @@ func decodeTags(typ reflect.Type, i int) structTag {
 		} else if tag == unique {
 			uni = true
 			continue
+		} else if tag == empty {
+			emp = true
+			continue
 		}
+
 		res = append(res, tag)
 	}
 
 	return structTag{
 		fieldType:    strings.Join(res, ","),
 		unique:       uni,
+		empty:        emp,
 		keepOriginal: keepOriginal,
 	}
 }
@@ -628,6 +643,7 @@ func decodeTags(typ reflect.Type, i int) structTag {
 type structTag struct {
 	fieldType    string
 	unique       bool
+	empty        bool
 	keepOriginal bool
 }
 
