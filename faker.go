@@ -500,7 +500,7 @@ func getValue(a interface{}) (reflect.Value, error) {
 					rand.Seed(time.Now().UnixNano())
 					i := rand.Intn(100)
 					if i%2 == 0 {
-						v.Field(i).Addr().Set(reflect.Zero(v.Field(i).Type()))
+						v.Field(i).Set(reflect.Zero(t))
 					}
 				}
 			}
