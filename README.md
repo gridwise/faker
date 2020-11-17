@@ -1,3 +1,7 @@
+# Forked from https://github.com/bxcodec/faker
+
+Adds support for the empty tag to allow tagged structs to receive empty values for fields randomly.
+
 # Docs
 
 ## [faker](#)
