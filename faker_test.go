@@ -87,6 +87,126 @@ type SomeStruct struct {
 	SomeInt32s []SomeInt32
 }
 
+type SomeStructWithEmpty struct {
+	Inta    int
+	Int8    int8
+	Int16   int16
+	Int32   int32
+	Int64   int64
+	Float32 float32
+	Float64 float64
+
+	UInta  uint
+	UInt8  uint8
+	UInt16 uint16
+	UInt32 uint32
+	UInt64 uint64
+
+	Latitude           float32  `faker:"lat"`
+	LATITUDE           float64  `faker:"lat"`
+	LatitudeEmpty      float64  `faker:"lat,empty"`
+	LatPtrEmpty        *float64 `faker:"lat,empty"`
+	Long               float32  `faker:"long"`
+	LONG               float64  `faker:"long"`
+	LongEmpty          float64  `faker:"long,empty"`
+	LongPtrEmpty       *float64 `faker:"long,empty"`
+	StringValue        string
+	CreditCardType     string `faker:"cc_type"`
+	CreditCardNumber   string `faker:"cc_number"`
+	Email              string `faker:"email"`
+	IPV4               string `faker:"ipv4"`
+	IPV6               string `faker:"ipv6"`
+	Bool               bool
+	SString            []string
+	SInt               []int
+	SInt8              []int8
+	SInt16             []int16
+	SInt32             []int32
+	SInt64             []int64
+	SFloat32           []float32
+	SFloat64           []float64
+	SBool              []bool
+	Struct             AStruct
+	TArray             TArray
+	Time               time.Time
+	Stime              []time.Time
+	Currency           string  `faker:"currency"`
+	Amount             float64 `faker:"amount"`
+	AmountWithCurrency string  `faker:"amount_with_currency"`
+	ID                 string  `faker:"uuid_digit"`
+	HyphenatedID       string  `faker:"uuid_hyphenated"`
+
+	MapStringString        map[string]string
+	MapStringStruct        map[string]AStruct
+	MapStringStructPointer map[string]*AStruct
+
+	SomeInt32s []SomeInt32
+}
+
+func (s SomeStructWithEmpty) String() string {
+	return fmt.Sprintf(`{
+	Inta: %v
+	Int8: %v
+	Int16: %v
+	Int32: %v
+	Int64: %v
+	Float32: %v
+	Float64: %v
+
+	UInta: %v
+	UInt8: %v
+	UInt16: %v
+	UInt32: %v
+	UInt64: %v
+
+	Latitude: %v
+	LATITUDE: %v
+	LatitudeEmpty: %v
+	LatPtrEmpty: %v
+	Long: %v
+	LONG: %v
+	LongEmpty: %v
+	LongPtrEmpty: %v
+	StringValue: %v
+	CreditCardType: %v
+	CreditCardNumber: %v
+	Email: %v
+	IPV4: %v
+	IPV6: %v
+	Bool: %v
+	SString: %v
+	SInt: %v
+	SInt8: %v
+	SInt16: %v
+	SInt32: %v
+	SInt64: %v
+	SFloat32: %v
+	SFloat64:%v
+	SBool: %v
+	Struct: %v
+	Time: %v
+	Stime: %v
+	Currency: %v
+	Amount: %v
+	AmountWithCurrency: %v
+	ID: %v
+	HyphenatedID: %v
+
+	MapStringString: %v
+	MapStringStruct: %v
+	MapStringStructPointer: %v
+	}`, s.Inta, s.Int8, s.Int16, s.Int32,
+		s.Int64, s.Float32, s.Float64, s.UInta,
+		s.UInt8, s.UInt16, s.UInt32, s.UInt64,
+		s.Latitude, s.LATITUDE, s.LatitudeEmpty, s.LatPtrEmpty, s.Long, s.LONG, s.LongEmpty, s.LongPtrEmpty,
+		s.StringValue, s.CreditCardType, s.CreditCardNumber,
+		s.Email, s.IPV4, s.IPV6, s.Bool, s.SString, s.SInt,
+		s.SInt8, s.SInt16, s.SInt32, s.SInt64, s.SFloat32, s.SFloat64,
+		s.SBool, s.Struct, s.Time, s.Stime, s.Currency, s.Amount,
+		s.AmountWithCurrency, s.ID, s.HyphenatedID, s.MapStringString,
+		s.MapStringStruct, s.MapStringStructPointer)
+}
+
 type SomeStructWithLen struct {
 	Inta  int   `faker:"boundary_start=5, boundary_end=10"`
 	Int8  int8  `faker:"boundary_start=5, boundary_end=10"`
@@ -195,7 +315,7 @@ type CStruct struct {
 }
 
 type TaggedStruct struct {
-	Latitude           float32 `faker:"lat"`
+	Latitude           float32 `faker:"lat,empty"`
 	Longitude          float32 `faker:"long"`
 	CreditCardNumber   string  `faker:"cc_number"`
 	CreditCardType     string  `faker:"cc_type"`
@@ -330,6 +450,15 @@ func TestFakerData(t *testing.T) {
 
 	// Example Result :
 	// {Int:8906957488773767119 Int8:6 Int16:14 Int32:391219825 Int64:2374447092794071106 String:poraKzAxVbWVkMkpcZCcWlYMd Bool:false SString:[MehdV aVotHsi] SInt:[528955241289647236 7620047312653801973 2774096449863851732] SInt8:[122 -92 -92] SInt16:[15679 -19444 -30246] SInt32:[1146660378 946021799 852909987] SInt64:[6079203475736033758 6913211867841842836 3269201978513619428] SFloat32:[0.019562425 0.12729558 0.36450312] SFloat64:[0.7825838989890364 0.9732903338838912 0.8316541489234004] SBool:[true false true] Struct:{Number:7693944638490551161 Height:6513508020379591917}}
+
+	var c SomeStructWithEmpty
+	err = FakeData(&c)
+
+	if err != nil {
+		t.Error("Expected NoError")
+	}
+	fmt.Println("SomeStructWithEmpty:")
+	fmt.Printf("%+v\n", c)
 
 }
 
